@@ -3,4 +3,5 @@
     <string name="hello_eltex">Hello Eltex!</string>
     <string name="menu_description">menu</string>
     <string name="avatar">avatar</string>
+    <string name="not_implemented">Not implemented</string>
 </resources>
