@@ -13,6 +13,10 @@ class NewEventActivity : AppCompatActivity() {
         val binding = ActivityNewEventBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val sharedContent = intent.getStringExtra("sharedContent")
+        if (sharedContent != null)
+            binding.content.setText(sharedContent)
+
         binding.toolbar.menu.findItem(R.id.save).setOnMenuItemClickListener {
             val content = binding.content.text?.toString().orEmpty()
             if (content.isBlank()) {

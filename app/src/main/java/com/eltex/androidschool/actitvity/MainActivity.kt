@@ -89,6 +89,13 @@ class MainActivity : AppCompatActivity(){
             newEventContract.launch(Intent(this, NewEventActivity::class.java))
         }
 
+        if (intent.action == Intent.ACTION_SEND) {
+            val text = intent.getStringExtra(Intent.EXTRA_TEXT)
+            intent.removeExtra(Intent.EXTRA_TEXT)
+            newEventContract.launch(Intent(this, NewEventActivity::class.java)
+                .putExtra("sharedContent", text))
+        }
+
         viewModel.uiState
             .flowWithLifecycle(lifecycle)
             .onEach {
