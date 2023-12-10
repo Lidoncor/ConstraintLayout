@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.update
 
 class InMemoryEventRepository : EventRepository {
     private val state = MutableStateFlow(
-        List(100) {
+        List(10) {
             Event(
                 id = it.toLong() + 1L,
                 content = "Слушайте, а как вы относитесь к тому, чтобы собраться большой компанией и поиграть в настолки? У меня есть несколько клевых игр, можем устроить вечер настолок! Пишите в лс или звоните",
@@ -18,6 +18,8 @@ class InMemoryEventRepository : EventRepository {
         }
             .reversed()
     )
+
+    private var nextId = state.value.first().id
 
     override fun getEvents(): Flow<List<Event>> = state.asStateFlow()
 
@@ -38,6 +40,33 @@ class InMemoryEventRepository : EventRepository {
             it.map { event ->
                 if (event.id == id) {
                     event.copy(participatedByMe = !event.participatedByMe)
+                } else {
+                    event
+                }
+            }
+        }
+    }
+
+    override fun addEvent(content: String) {
+        state.update { events ->
+            buildList(capacity = events.size + 1) {
+                add(Event(id = ++nextId, content = content, author = "Student"))
+                addAll(events)
+            }
+        }
+    }
+
+    override fun deleteById(id: Long) {
+        state.update { events ->
+            events.filter { it.id != id }
+        }
+    }
+
+    override fun editById(id: Long, content: String) {
+        state.update {
+            it.map { event ->
+                if (event.id == id) {
+                    event.copy(content = content)
                 } else {
                     event
                 }

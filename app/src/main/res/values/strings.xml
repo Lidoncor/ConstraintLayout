@@ -4,4 +4,11 @@
     <string name="menu_description">menu</string>
     <string name="avatar">avatar</string>
     <string name="not_implemented">Not implemented</string>
+    <string name="save_event" />
+    <string name="new_event_title" />
+    <string name="content_hint">Content</string>
+    <string name="new_event_desc">New event</string>
+    <string name="event_empty_error">Content must not be blank</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
 </resources>
