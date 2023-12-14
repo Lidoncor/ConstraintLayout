@@ -12,9 +12,10 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.eltex.androidschool.R
 import com.eltex.androidschool.adapter.EventsAdapter
 import com.eltex.androidschool.databinding.ActivityMainBinding
+import com.eltex.androidschool.db.AppDb
 import com.eltex.androidschool.itemdecoration.OffsetDecoration
 import com.eltex.androidschool.model.Event
-import com.eltex.androidschool.repository.LocalEventsRepository
+import com.eltex.androidschool.repository.SQLiteEventRepository
 import com.eltex.androidschool.viewmodel.EventViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -35,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
         val viewModel by viewModels<EventViewModel> {
             viewModelFactory {
-                initializer { EventViewModel(LocalEventsRepository(applicationContext)) }
+                initializer { EventViewModel(SQLiteEventRepository(AppDb.getInstance(applicationContext).eventDao)) }
             }
         }
 
