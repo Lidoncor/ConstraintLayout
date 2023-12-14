@@ -1,6 +1,7 @@
 package com.eltex.androidschool.utils
 
 import android.content.Context
+import android.database.Cursor
 import android.widget.Toast
 import androidx.annotation.StringRes
 
@@ -13,3 +14,9 @@ fun Context.toast(@StringRes res: Int, short: Boolean = true) {
     val length = if (short) Toast.LENGTH_SHORT else Toast.LENGTH_LONG
     Toast.makeText(this, res, length).show()
 }
+
+fun Cursor.getLongOrThrow(columnName: String): Long = getLong(getColumnIndexOrThrow(columnName))
+
+fun Cursor.getStringOrThrow(columnName: String): String = getString(getColumnIndexOrThrow(columnName))
+
+fun Cursor.getIntOrThrow(columnName: String): Boolean = getInt(getColumnIndexOrThrow(columnName)) == 1
