@@ -8,12 +8,17 @@ import com.eltex.androidschool.databinding.ActivityNewEventBinding
 import com.eltex.androidschool.utils.toast
 
 class NewEventActivity : AppCompatActivity() {
+
+    companion object{
+        private const val SHARED_CONTENT_INTENT = "sharedContent"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityNewEventBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val sharedContent = intent.getStringExtra("sharedContent")
+        val sharedContent = intent.getStringExtra(SHARED_CONTENT_INTENT)
         if (sharedContent != null)
             binding.content.setText(sharedContent)
 

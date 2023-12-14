@@ -14,12 +14,20 @@ import com.eltex.androidschool.adapter.EventsAdapter
 import com.eltex.androidschool.databinding.ActivityMainBinding
 import com.eltex.androidschool.itemdecoration.OffsetDecoration
 import com.eltex.androidschool.model.Event
-import com.eltex.androidschool.repository.InMemoryEventRepository
+import com.eltex.androidschool.repository.LocalEventsRepository
 import com.eltex.androidschool.viewmodel.EventViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-class MainActivity : AppCompatActivity(){
+class MainActivity : AppCompatActivity() {
+
+    companion object{
+        private const val NEW_CONTENT_INTENT = "newContent"
+        private const val OLD_CONTENT_INTENT = "oldContent"
+        private const val SHARED_CONTENT_INTENT = "sharedContent"
+        private const val ID_INTENT = "id"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
@@ -27,7 +35,7 @@ class MainActivity : AppCompatActivity(){
 
         val viewModel by viewModels<EventViewModel> {
             viewModelFactory {
-                initializer { EventViewModel(InMemoryEventRepository()) }
+                initializer { EventViewModel(LocalEventsRepository(applicationContext)) }
             }
         }
 
@@ -41,8 +49,8 @@ class MainActivity : AppCompatActivity(){
 
         val editEventContract =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                val content = it.data?.getStringExtra("newContent")
-                val id = it.data?.getLongExtra("id", 0L)
+                val content = it.data?.getStringExtra(NEW_CONTENT_INTENT)
+                val id = it.data?.getLongExtra(ID_INTENT, 0L)
                 if (content != null && id != null) {
                     viewModel.editById(id, content)
                 }
@@ -72,9 +80,9 @@ class MainActivity : AppCompatActivity(){
                 }
 
                 override fun onEditClicked(event: Event) {
-                    editEventContract.launch(Intent(this@MainActivity, EditEventActivity::class.java)
-                        .putExtra("id", event.id)
-                        .putExtra("oldContent", event.content))
+                    editEventContract.launch(Intent(applicationContext, EditEventActivity::class.java)
+                        .putExtra(ID_INTENT, event.id)
+                        .putExtra(OLD_CONTENT_INTENT, event.content))
                 }
             }
         )
@@ -93,7 +101,7 @@ class MainActivity : AppCompatActivity(){
             val text = intent.getStringExtra(Intent.EXTRA_TEXT)
             intent.removeExtra(Intent.EXTRA_TEXT)
             newEventContract.launch(Intent(this, NewEventActivity::class.java)
-                .putExtra("sharedContent", text))
+                .putExtra(SHARED_CONTENT_INTENT, text))
         }
 
         viewModel.uiState
